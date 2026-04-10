@@ -110,7 +110,7 @@ body {
   margin-bottom: 20px;
 }
 
-.input-row input {
+.input-row textarea {
   flex: 1;
   padding: 14px 16px;
   background: var(--surface);
@@ -120,13 +120,16 @@ body {
   font-size: 16px;
   outline: none;
   transition: border-color 0.2s;
+  resize: none;
+  font-family: inherit;
+  line-height: 1.4;
 }
 
-.input-row input:focus {
+.input-row textarea:focus {
   border-color: var(--accent);
 }
 
-.input-row input::placeholder {
+.input-row textarea::placeholder {
   color: var(--text-dim);
 }
 

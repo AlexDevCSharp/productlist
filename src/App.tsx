@@ -15,14 +15,17 @@ function App() {
   const [list, setList] = useState<ShoppingList>(loadList);
   const [input, setInput] = useState('');
   const [showMenu, setShowMenu] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     saveList(list);
   }, [list]);
 
   const handleAdd = () => {
-    const names = input.split(',').map(s => s.trim()).filter(Boolean);
+    const names = input
+      .split(/[\n,;]+/)
+      .map(s => s.replace(/^[\d.\-)\s]+/, '').trim())
+      .filter(Boolean);
     let updated = list;
     for (const name of names) {
       updated = addProduct(updated, name);
@@ -33,7 +36,10 @@ function App() {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') handleAdd();
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleAdd();
+    }
   };
 
   const cycleStatus = (productId: string, currentStatus: ProductStatus) => {
@@ -76,14 +82,13 @@ function App() {
       </header>
 
       <div className="input-row">
-        <input
+        <textarea
           ref={inputRef}
-          type="text"
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Добавить продукт (через запятую)..."
-          autoComplete="off"
+          placeholder={"Вставьте список как есть:\nмолоко\nхлеб\nкурица"}
+          rows={input.includes('\n') ? Math.min(input.split('\n').length + 1, 8) : 1}
         />
         <button className="add-btn" onClick={handleAdd} disabled={!input.trim()}>
           +
