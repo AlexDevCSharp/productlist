@@ -3,13 +3,21 @@ import { ShoppingList, ProductStatus } from './types';
 import { loadList, saveList, addProduct, removeProduct, setProductStatus, clearBought, clearAll } from './storage';
 import './App.css';
 
-const STATUS_ICONS: Record<ProductStatus, string> = {
-  pending: '⬜',
-  bought: '✅',
-  unavailable: '❌',
+const CATEGORY_EMOJI: Record<string, string> = {
+  'Молочное': '🥛',
+  'Мясо и птица': '🥩',
+  'Рыба и морепродукты': '🐟',
+  'Овощи': '🥬',
+  'Фрукты и ягоды': '🍎',
+  'Хлеб и выпечка': '🍞',
+  'Крупы и макароны': '🌾',
+  'Напитки': '🥤',
+  'Бакалея': '🫙',
+  'Яйца': '🥚',
+  'Замороженное': '🧊',
+  'Хозтовары': '🧹',
+  'Другое': '📦',
 };
-
-const STATUS_CYCLE: ProductStatus[] = ['pending', 'bought', 'unavailable'];
 
 function App() {
   const [list, setList] = useState<ShoppingList>(loadList);
@@ -42,9 +50,14 @@ function App() {
     }
   };
 
-  const cycleStatus = (productId: string, currentStatus: ProductStatus) => {
-    const nextIndex = (STATUS_CYCLE.indexOf(currentStatus) + 1) % STATUS_CYCLE.length;
-    setList(setProductStatus(list, productId, STATUS_CYCLE[nextIndex]));
+  const toggleBought = (productId: string, currentStatus: ProductStatus) => {
+    const next: ProductStatus = currentStatus === 'bought' ? 'pending' : 'bought';
+    setList(setProductStatus(list, productId, next));
+  };
+
+  const toggleUnavailable = (productId: string, currentStatus: ProductStatus) => {
+    const next: ProductStatus = currentStatus === 'unavailable' ? 'pending' : 'unavailable';
+    setList(setProductStatus(list, productId, next));
   };
 
   const handleRemove = (productId: string) => {
@@ -55,13 +68,17 @@ function App() {
   const boughtItems = list.categories.reduce(
     (sum, c) => sum + c.items.filter(i => i.status === 'bought').length, 0
   );
+  const totalCategories = list.categories.length;
 
   return (
     <div className="app">
       <header className="header">
+        <div className="header-icon">🛒</div>
         <h1>Список покупок</h1>
         {totalItems > 0 && (
-          <span className="counter">{boughtItems}/{totalItems}</span>
+          <div className="stats">
+            {boughtItems}/{totalItems} куплено · {totalCategories} отделов
+          </div>
         )}
         <button
           className="menu-btn"
@@ -70,14 +87,17 @@ function App() {
           ⋮
         </button>
         {showMenu && (
-          <div className="menu-dropdown">
-            <button onClick={() => { setList(clearBought(list)); setShowMenu(false); }}>
-              Убрать купленное
-            </button>
-            <button onClick={() => { setList(clearAll(list)); setShowMenu(false); }}>
-              Очистить всё
-            </button>
-          </div>
+          <>
+            <div className="menu-overlay" onClick={() => setShowMenu(false)} />
+            <div className="menu-dropdown">
+              <button onClick={() => { setList(clearBought(list)); setShowMenu(false); }}>
+                ✅ Убрать купленное
+              </button>
+              <button onClick={() => { setList(clearAll(list)); setShowMenu(false); }}>
+                🗑️ Очистить всё
+              </button>
+            </div>
+          </>
         )}
       </header>
 
@@ -87,7 +107,7 @@ function App() {
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder={"Вставьте список как есть:\nмолоко\nхлеб\nкурица"}
+          placeholder={"Вставьте список:\nмолоко\nхлеб\nкурица"}
           rows={input.includes('\n') ? Math.min(input.split('\n').length + 1, 8) : 1}
         />
         <button className="add-btn" onClick={handleAdd} disabled={!input.trim()}>
@@ -97,39 +117,60 @@ function App() {
 
       {list.categories.length === 0 && (
         <div className="empty">
+          <div className="empty-icon">🛒</div>
           <p>Список пуст</p>
-          <p className="hint">Введите продукты выше — они автоматически распределятся по категориям</p>
+          <p className="hint">Введите продукты — они автоматически распределятся по категориям</p>
         </div>
       )}
 
       <div className="categories">
-        {list.categories.map(cat => (
-          <div key={cat.name} className="category">
-            <h2 className="category-name">{cat.name}</h2>
-            <ul>
-              {cat.items.map(item => (
-                <li
-                  key={item.id}
-                  className={`item item--${item.status}`}
-                >
-                  <button
-                    className="status-btn"
-                    onClick={() => cycleStatus(item.id, item.status)}
+        {list.categories.map(cat => {
+          const emoji = CATEGORY_EMOJI[cat.name] || '📦';
+          const catBought = cat.items.filter(i => i.status === 'bought').length;
+          return (
+            <div key={cat.name} className="category">
+              <div className="category-header">
+                <span className="category-emoji">{emoji}</span>
+                <h2 className="category-name">{cat.name}</h2>
+                <span className="category-count">
+                  {catBought > 0 && <span className="category-bought">{catBought}/</span>}
+                  {cat.items.length} шт
+                </span>
+              </div>
+              <ul>
+                {cat.items.map(item => (
+                  <li
+                    key={item.id}
+                    className={`item item--${item.status}`}
                   >
-                    {STATUS_ICONS[item.status]}
-                  </button>
-                  <span className="item-name">{item.name}</span>
-                  <button
-                    className="delete-btn"
-                    onClick={() => handleRemove(item.id)}
-                  >
-                    🗑
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
+                    <label className="checkbox" onClick={() => toggleBought(item.id, item.status)}>
+                      <span className={`checkbox-box ${item.status === 'bought' ? 'checked' : ''}`}>
+                        {item.status === 'bought' && '✓'}
+                      </span>
+                    </label>
+                    <span className="item-name">{item.name}</span>
+                    <div className="item-actions">
+                      <button
+                        className={`unavailable-btn ${item.status === 'unavailable' ? 'active' : ''}`}
+                        onClick={() => toggleUnavailable(item.id, item.status)}
+                        title="Нет в наличии"
+                      >
+                        ✕
+                      </button>
+                      <button
+                        className="delete-btn"
+                        onClick={() => handleRemove(item.id)}
+                        title="Удалить"
+                      >
+                        🗑
+                      </button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
