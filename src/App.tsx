@@ -24,8 +24,8 @@ function App() {
   const handleAdd = () => {
     const names = input
       .split(/[\n,;]+/)
-      .map(s => s.replace(/^[\d.\-)\s]+/, '').trim())
-      .filter(Boolean);
+      .map(s => s.replace(/^[\d.\-)\s•·●○]+/, '').trim())
+      .filter(s => s.length >= 2 && !/^(если|или|либо|по желанию|опционально)\b/i.test(s));
     let updated = list;
     for (const name of names) {
       updated = addProduct(updated, name);
