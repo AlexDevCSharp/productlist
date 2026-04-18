@@ -488,11 +488,31 @@ function checkStemMap(lower: string): string | null {
   return null;
 }
 
+// Персональные метки: если продукт содержит имя как отдельное слово —
+// он попадает в персональную категорию, независимо от типа продукта.
+// "йогурт Лина" → "Для Лины", но "малина" → не срабатывает.
+const personalLabels: [string, string][] = [
+  ['лина', 'Для Лины'],
+];
+
+function checkPersonalLabels(words: string[]): string | null {
+  for (const [name, category] of personalLabels) {
+    if (words.includes(normalize(name))) return category;
+  }
+  return null;
+}
+
 export function findCategory(productName: string): string {
   const cleaned = cleanProductName(productName);
   const lower = normalize(cleaned);
 
   if (!lower || lower.length < 2) return 'Другое';
+
+  const words = lower.split(/\s+/);
+
+  // Персональные метки — наивысший приоритет
+  const personalResult = checkPersonalLabels(words);
+  if (personalResult) return personalResult;
 
   // Модификаторы имеют приоритет над основным словарём
   const modifierResult = checkModifiers(lower);
