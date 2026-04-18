@@ -1,11 +1,15 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import workoutData from '../data/workout.json';
+import {
+  loadLogs, saveExerciseLog, deleteExerciseLog,
+  WorkoutLogs, ExerciseLog, SetLog,
+  todayISO, dateToWeekIndex, toISODate,
+} from '../storage/workoutLogs';
+import CalendarModal from './workout/CalendarModal';
+import WeekStrip from './workout/WeekStrip';
 
 const program = workoutData.program;
 const days = program.days;
-
-// JS getDay(): 0=Sun → index 6, 1=Mon → 0, etc.
-const todayIndex = (new Date().getDay() + 6) % 7;
 
 const DAY_ICONS: Record<string, string> = {
   'Ноги + Плечи': '🦵',
@@ -15,62 +19,135 @@ const DAY_ICONS: Record<string, string> = {
   'Отдых': '😴',
 };
 
-type View = { screen: 'week' } | { screen: 'day'; dayIdx: number } | { screen: 'exercise'; dayIdx: number; exIdx: number };
+const MONTH_SHORT = ['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'];
+const DAY_FULL = ['Понедельник','Вторник','Среда','Четверг','Пятница','Суббота','Воскресенье'];
+
+function formatDate(iso: string): string {
+  const d = new Date(iso + 'T12:00:00');
+  return `${DAY_FULL[dateToWeekIndex(iso)]}, ${d.getDate()} ${MONTH_SHORT[d.getMonth()]}`;
+}
+
+type View =
+  | { screen: 'week' }
+  | { screen: 'day'; date: string }
+  | { screen: 'exercise'; date: string; exIdx: number };
 
 export default function WorkoutPage() {
   const [view, setView] = useState<View>({ screen: 'week' });
+  const [logs, setLogs] = useState<WorkoutLogs>(loadLogs);
+  const [showCalendar, setShowCalendar] = useState(false);
+
+  function refreshLogs() { setLogs(loadLogs()); }
 
   if (view.screen === 'week') {
-    return <WeekView onSelectDay={i => setView({ screen: 'day', dayIdx: i })} />;
+    return (
+      <>
+        <WeekView
+          logs={logs}
+          onSelectDay={date => setView({ screen: 'day', date })}
+          onOpenCalendar={() => setShowCalendar(true)}
+        />
+        {showCalendar && (
+          <CalendarModal
+            logs={logs}
+            onSelect={date => { setShowCalendar(false); setView({ screen: 'day', date }); }}
+            onClose={() => setShowCalendar(false)}
+          />
+        )}
+      </>
+    );
   }
+
   if (view.screen === 'day') {
     return (
       <DayView
-        dayIdx={view.dayIdx}
+        date={view.date}
+        logs={logs}
         onBack={() => setView({ screen: 'week' })}
-        onSelectExercise={i => setView({ screen: 'exercise', dayIdx: view.dayIdx, exIdx: i })}
+        onSelectExercise={i => setView({ screen: 'exercise', date: view.date, exIdx: i })}
       />
     );
   }
+
   return (
     <ExerciseView
-      dayIdx={view.dayIdx}
+      date={view.date}
       exIdx={view.exIdx}
-      onBack={() => setView({ screen: 'day', dayIdx: view.dayIdx })}
+      logs={logs}
+      onLogsChange={setLogs}
+      onBack={() => setView({ screen: 'day', date: view.date })}
     />
   );
 }
 
-/* ── Week view ── */
+/* ── Week View ── */
 
-function WeekView({ onSelectDay }: { onSelectDay: (i: number) => void }) {
+function WeekView({ logs, onSelectDay, onOpenCalendar }: {
+  logs: WorkoutLogs;
+  onSelectDay: (date: string) => void;
+  onOpenCalendar: () => void;
+}) {
+  const today = todayISO();
+  const [selectedDate, setSelectedDate] = useState(today);
+
+  // When user picks from strip, update the visible week and navigate to that day
+  function handleStripSelect(date: string) {
+    setSelectedDate(date);
+    onSelectDay(date);
+  }
+
+  // Build current week card list based on selectedDate's week
+  const weekDates = Array.from({ length: 7 }, (_, i) => {
+    const monday = new Date(selectedDate + 'T12:00:00');
+    monday.setDate(monday.getDate() - dateToWeekIndex(selectedDate) + i);
+    return toISODate(monday);
+  });
+
   return (
     <div className="page">
       <div className="workout-header">
-        <div className="workout-header-icon">💪</div>
-        <h1>Тренировки</h1>
-        <p className="workout-subtitle">{program.name} · {program.level === 'beginner' ? 'начальный уровень' : program.level}</p>
+        <div className="workout-header-top">
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <div className="workout-header-icon">💪</div>
+            <h1>Тренировки</h1>
+            <p className="workout-subtitle">{program.name}</p>
+          </div>
+          <button className="cal-icon-btn" onClick={onOpenCalendar} title="Открыть календарь">
+            📅
+          </button>
+        </div>
+        <WeekStrip selectedDate={selectedDate} logs={logs} onSelect={handleStripSelect} />
       </div>
 
       <div className="week-list">
-        {days.map((day, i) => {
-          const isToday = i === todayIndex;
+        {weekDates.map((date) => {
+          const dayIdx = dateToWeekIndex(date);
+          const day = days[dayIdx];
+          const isToday = date === today;
+          const isFuture = date > today;
           const isRest = day.focus === 'Отдых';
           const isCardio = day.focus === 'Кардио';
-          const exCount = day.exercises?.length ?? 0;
           const icon = DAY_ICONS[day.focus] ?? '🏋️';
+          const dayLog = logs[date];
+          const loggedCount = dayLog?.exercises?.length ?? 0;
+          const exCount = day.exercises?.length ?? 0;
+          const d = new Date(date + 'T12:00:00');
+          const dateLabel = `${d.getDate()} ${MONTH_SHORT[d.getMonth()]}`;
 
           return (
             <button
-              key={day.day}
-              className={`day-card ${isToday ? 'day-card--today' : ''} ${isRest ? 'day-card--rest' : ''}`}
-              onClick={() => !isRest && onSelectDay(i)}
-              disabled={isRest}
+              key={date}
+              className={`day-card ${isToday ? 'day-card--today' : ''} ${isRest || isFuture ? 'day-card--rest' : ''}`}
+              onClick={() => !isRest && !isFuture && onSelectDay(date)}
+              disabled={isRest || isFuture}
             >
               <div className="day-card-left">
                 <span className="day-icon">{icon}</span>
                 <div>
-                  <div className="day-name">{day.day} {isToday && <span className="today-badge">сегодня</span>}</div>
+                  <div className="day-name">
+                    {day.day}, {dateLabel}
+                    {isToday && <span className="today-badge">сегодня</span>}
+                  </div>
                   <div className="day-focus">{day.focus}</div>
                 </div>
               </div>
@@ -79,10 +156,12 @@ function WeekView({ onSelectDay }: { onSelectDay: (i: number) => void }) {
                   <span className="day-meta">отдых</span>
                 ) : isCardio ? (
                   <span className="day-meta">40 мин</span>
+                ) : loggedCount > 0 ? (
+                  <span className="day-meta day-meta--logged">✓ {loggedCount}/{exCount}</span>
                 ) : (
                   <span className="day-meta">{exCount} упр.</span>
                 )}
-                {!isRest && <span className="day-chevron">›</span>}
+                {!isRest && !isFuture && <span className="day-chevron">›</span>}
               </div>
             </button>
           );
@@ -92,17 +171,20 @@ function WeekView({ onSelectDay }: { onSelectDay: (i: number) => void }) {
   );
 }
 
-/* ── Day view ── */
+/* ── Day View ── */
 
-function DayView({ dayIdx, onBack, onSelectExercise }: {
-  dayIdx: number;
+function DayView({ date, logs, onBack, onSelectExercise }: {
+  date: string;
+  logs: WorkoutLogs;
   onBack: () => void;
   onSelectExercise: (i: number) => void;
 }) {
+  const dayIdx = dateToWeekIndex(date);
   const day = days[dayIdx];
   const warmup = (day as any).warmup;
   const cooldown = (day as any).cooldown;
   const isCardio = day.focus === 'Кардио';
+  const dayLog = logs[date];
 
   return (
     <div className="page">
@@ -112,7 +194,7 @@ function DayView({ dayIdx, onBack, onSelectExercise }: {
 
       <div className="day-header">
         <div className="day-header-icon">{DAY_ICONS[day.focus] ?? '🏋️'}</div>
-        <h2>{day.day}</h2>
+        <h2>{formatDate(date)}</h2>
         <p className="day-focus-title">{day.focus}</p>
       </div>
 
@@ -142,21 +224,29 @@ function DayView({ dayIdx, onBack, onSelectExercise }: {
         </Section>
       ) : (
         <Section title="Упражнения">
-          {day.exercises.map((ex: any, i: number) => (
-            <button key={ex.id} className="exercise-row" onClick={() => onSelectExercise(i)}>
-              <div className="exercise-row-num">{ex.id}</div>
-              <img src={ex.image_url} alt={ex.name} className="exercise-gif-tiny" />
-              <div className="exercise-row-info">
-                <div className="exercise-row-name">{ex.name}</div>
-                <div className="exercise-row-meta">
-                  {ex.sets} × {ex.reps}
-                  {ex.weight_start_kg && ` · ${ex.weight_start_kg} кг`}
+          {day.exercises.map((ex: any, i: number) => {
+            const exLog = dayLog?.exercises?.find(e => e.exerciseId === ex.id);
+            const setCount = exLog?.sets?.length ?? 0;
+            const lastSet = exLog?.sets?.[setCount - 1];
+            return (
+              <button key={ex.id} className="exercise-row" onClick={() => onSelectExercise(i)}>
+                <div className="exercise-row-num">{ex.id}</div>
+                <img src={ex.image_url} alt={ex.name} className="exercise-gif-tiny" />
+                <div className="exercise-row-info">
+                  <div className="exercise-row-name">{ex.name}</div>
+                  <div className="exercise-row-meta">{ex.sets} × {ex.reps}</div>
+                  {setCount > 0 ? (
+                    <div className="exercise-row-log">
+                      ✓ {setCount} подх. · последний: {lastSet!.weight} кг × {lastSet!.reps}
+                    </div>
+                  ) : (
+                    <div className="exercise-row-muscles">{(ex.muscles as string[]).join(', ')}</div>
+                  )}
                 </div>
-                <div className="exercise-row-muscles">{(ex.muscles as string[]).join(', ')}</div>
-              </div>
-              <span className="day-chevron">›</span>
-            </button>
-          ))}
+                <span className="day-chevron">›</span>
+              </button>
+            );
+          })}
         </Section>
       )}
 
@@ -177,14 +267,64 @@ function DayView({ dayIdx, onBack, onSelectExercise }: {
   );
 }
 
-/* ── Exercise view ── */
+/* ── Exercise View ── */
 
-function ExerciseView({ dayIdx, exIdx, onBack }: {
-  dayIdx: number;
+function ExerciseView({ date, exIdx, logs, onLogsChange, onBack }: {
+  date: string;
   exIdx: number;
+  logs: WorkoutLogs;
+  onLogsChange: (logs: WorkoutLogs) => void;
   onBack: () => void;
 }) {
-  const ex = (days[dayIdx] as any).exercises[exIdx];
+  const dayIdx = dateToWeekIndex(date);
+  const day = days[dayIdx];
+  const ex = (day as any).exercises[exIdx];
+  const isPast = date < todayISO();
+
+  const existingLog = logs[date]?.exercises?.find((e: ExerciseLog) => e.exerciseId === ex.id);
+  const [sets, setSets] = useState<SetLog[]>(existingLog?.sets ?? []);
+  const [readOnly, setReadOnly] = useState(isPast && !!existingLog?.sets?.length);
+  const [toast, setToast] = useState('');
+
+  useEffect(() => {
+    const existing = logs[date]?.exercises?.find((e: ExerciseLog) => e.exerciseId === ex.id);
+    setSets(existing?.sets ?? []);
+    setReadOnly(isPast && !!(existing?.sets?.length));
+  }, [date, ex.id]);
+
+  function addSet() {
+    const last = sets[sets.length - 1];
+    setSets(s => [...s, { weight: last?.weight ?? 0, reps: last?.reps ?? 0 }]);
+  }
+
+  function updateSet(i: number, field: keyof SetLog, val: number) {
+    setSets(s => s.map((set, idx) => idx === i ? { ...set, [field]: val } : set));
+  }
+
+  function removeSet(i: number) {
+    setSets(s => s.filter((_, idx) => idx !== i));
+  }
+
+  function handleSave() {
+    const log: ExerciseLog = { exerciseId: ex.id, exerciseName: ex.name, sets };
+    const updated = saveExerciseLog(date, dayIdx, day.focus, log);
+    onLogsChange(updated);
+    if (isPast) setReadOnly(true);
+    showToast('Сохранено ✓');
+  }
+
+  function handleDelete() {
+    const updated = deleteExerciseLog(date, ex.id);
+    onLogsChange(updated);
+    setSets([]);
+    setReadOnly(false);
+    showToast('Удалено');
+  }
+
+  function showToast(msg: string) {
+    setToast(msg);
+    setTimeout(() => setToast(''), 2000);
+  }
 
   return (
     <div className="page">
@@ -197,9 +337,7 @@ function ExerciseView({ dayIdx, exIdx, onBack }: {
         <div className="ex-badges">
           <span className="badge badge--sets">{ex.sets} подхода</span>
           <span className="badge badge--reps">{ex.reps} повт.</span>
-          {ex.weight_start_kg && (
-            <span className="badge badge--weight">с {ex.weight_start_kg} кг</span>
-          )}
+          {ex.weight_start_kg && <span className="badge badge--weight">с {ex.weight_start_kg} кг</span>}
         </div>
       </div>
 
@@ -213,13 +351,8 @@ function ExerciseView({ dayIdx, exIdx, onBack }: {
         ))}
       </div>
 
-      {ex.equipment && (
-        <InfoCard icon="🏋️" label="Оборудование" text={ex.equipment} />
-      )}
-
-      {ex.replaced && (
-        <InfoCard icon="🔄" label={`Заменено: ${ex.original}`} text={ex.replace_reason} accent />
-      )}
+      {ex.equipment && <InfoCard icon="🏋️" label="Оборудование" text={ex.equipment} />}
+      {ex.replaced && <InfoCard icon="🔄" label={`Заменено: ${ex.original}`} text={ex.replace_reason} accent />}
 
       <Section title="Техника">
         <ol className="technique-list">
@@ -240,9 +373,7 @@ function ExerciseView({ dayIdx, exIdx, onBack }: {
         </Section>
       )}
 
-      {ex.spine_note && (
-        <div className="spine-note">🦴 {ex.spine_note}</div>
-      )}
+      {ex.spine_note && <div className="spine-note">🦴 {ex.spine_note}</div>}
 
       {ex.alternative && (
         <Section title="Альтернатива">
@@ -257,6 +388,74 @@ function ExerciseView({ dayIdx, exIdx, onBack }: {
           </div>
         </Section>
       )}
+
+      {/* ── Set logging section ── */}
+      <div className="sets-section">
+        <div className="section-title">Мои подходы</div>
+
+        {sets.length === 0 && !readOnly && (
+          <p className="sets-empty">Нажмите «+ Добавить подход» чтобы начать</p>
+        )}
+
+        {sets.map((set, i) => (
+          <div key={i} className="set-row">
+            <span className="set-num">{i + 1}</span>
+            <div className="set-field">
+              <input
+                type="number"
+                className="set-input"
+                value={set.weight || ''}
+                min={0}
+                placeholder="0"
+                readOnly={readOnly}
+                onChange={e => updateSet(i, 'weight', parseFloat(e.target.value) || 0)}
+              />
+              <span className="set-unit">кг</span>
+            </div>
+            <span className="set-sep">×</span>
+            <div className="set-field">
+              <input
+                type="number"
+                className="set-input"
+                value={set.reps || ''}
+                min={0}
+                placeholder="0"
+                readOnly={readOnly}
+                onChange={e => updateSet(i, 'reps', parseInt(e.target.value) || 0)}
+              />
+              <span className="set-unit">раз</span>
+            </div>
+            {!readOnly && (
+              <button className="set-delete" onClick={() => removeSet(i)}>🗑</button>
+            )}
+          </div>
+        ))}
+
+        {!readOnly && (
+          <button className="sets-add-btn" onClick={addSet}>+ Добавить подход</button>
+        )}
+
+        <div className="sets-actions">
+          {readOnly ? (
+            <button className="sets-save-btn sets-save-btn--edit" onClick={() => setReadOnly(false)}>
+              Изменить
+            </button>
+          ) : (
+            <button
+              className="sets-save-btn"
+              onClick={handleSave}
+              disabled={sets.length === 0}
+            >
+              Сохранить
+            </button>
+          )}
+          {sets.length > 0 && readOnly && (
+            <button className="sets-delete-btn" onClick={handleDelete}>Удалить запись</button>
+          )}
+        </div>
+      </div>
+
+      {toast && <div className="toast">{toast}</div>}
     </div>
   );
 }
