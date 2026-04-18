@@ -492,3 +492,196 @@ body {
 .delete-btn:active {
   opacity: 1;
 }
+
+/* ═══════════════════════════════════════
+   WORKOUT
+   ═══════════════════════════════════════ */
+
+/* Header */
+.workout-header {
+  text-align: center;
+  padding: 20px 0 16px;
+}
+.workout-header-icon { font-size: 36px; margin-bottom: 4px; }
+.workout-header h1 { font-size: 28px; font-weight: 800; margin-bottom: 4px; }
+.workout-subtitle { font-size: 13px; color: var(--text-secondary); }
+
+/* Week list */
+.week-list { display: flex; flex-direction: column; gap: 10px; }
+
+.day-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  transition: background 0.15s;
+}
+.day-card:active { background: var(--bg); }
+.day-card--today {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-light), var(--shadow);
+}
+.day-card--rest { opacity: 0.5; cursor: default; }
+.day-card--rest:active { background: var(--surface); }
+
+.day-card-left { display: flex; align-items: center; gap: 12px; }
+.day-icon { font-size: 26px; }
+.day-name { font-size: 15px; font-weight: 700; color: var(--text); }
+.day-focus { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+.today-badge {
+  display: inline-block;
+  background: var(--accent);
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 10px;
+  margin-left: 6px;
+  vertical-align: middle;
+  letter-spacing: 0.02em;
+}
+.day-card-right { display: flex; align-items: center; gap: 6px; }
+.day-meta { font-size: 13px; color: var(--text-secondary); font-weight: 500; }
+.day-chevron { font-size: 22px; color: var(--text-dim); }
+
+/* Nav bar (back button) */
+.nav-bar { display: flex; align-items: center; padding: 8px 0 4px; }
+.back-btn {
+  background: none; border: none; cursor: pointer;
+  font-size: 17px; font-weight: 600; color: var(--accent);
+  padding: 4px 0;
+}
+
+/* Day header */
+.day-header { text-align: center; padding: 12px 0 20px; }
+.day-header-icon { font-size: 40px; margin-bottom: 6px; }
+.day-header h2 { font-size: 24px; font-weight: 800; }
+.day-focus-title { font-size: 15px; color: var(--text-secondary); margin-top: 4px; }
+
+/* Sections */
+.section { margin-bottom: 20px; }
+.section-title {
+  font-size: 12px; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--text-secondary);
+  margin-bottom: 8px; padding-left: 2px;
+}
+.section-body {
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+/* GIF sizes */
+.exercise-gif-tiny {
+  width: 52px; height: 38px; object-fit: cover;
+  border-radius: 8px; flex-shrink: 0; background: var(--bg);
+}
+.exercise-gif-small {
+  width: 72px; height: 54px; object-fit: cover;
+  border-radius: 8px; flex-shrink: 0; background: var(--bg);
+}
+.ex-gif-main {
+  width: 100%; max-height: 220px; object-fit: contain;
+  border-radius: var(--radius); background: var(--bg);
+}
+
+/* Warmup / cardio / stretch cards */
+.warmup-card, .cardio-card, .stretch-card, .alt-card {
+  display: flex; gap: 12px; align-items: flex-start; padding: 14px;
+}
+.warmup-name, .cardio-name, .stretch-name, .alt-name {
+  font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px;
+}
+.warmup-meta, .cardio-meta, .stretch-tech, .alt-notes {
+  font-size: 13px; color: var(--text-secondary); line-height: 1.4;
+}
+
+/* Exercise rows in day view */
+.exercise-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 16px; width: 100%; background: none;
+  border: none; cursor: pointer; text-align: left;
+}
+.exercise-row + .exercise-row { border-top: 1px solid #f0ebe3; }
+.exercise-row:active { background: var(--bg); }
+.exercise-row-num {
+  width: 24px; height: 24px; border-radius: 50%;
+  background: var(--accent-light); color: var(--accent);
+  font-size: 12px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.exercise-row-info { flex: 1; min-width: 0; }
+.exercise-row-name { font-size: 15px; font-weight: 600; color: var(--text); }
+.exercise-row-meta { font-size: 13px; color: var(--accent); font-weight: 600; margin-top: 2px; }
+.exercise-row-muscles { font-size: 12px; color: var(--text-dim); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* Exercise detail */
+.ex-detail-header { padding: 12px 0 16px; }
+.ex-detail-name { font-size: 22px; font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
+.ex-badges { display: flex; flex-wrap: wrap; gap: 6px; }
+.badge {
+  padding: 5px 12px; border-radius: 20px;
+  font-size: 13px; font-weight: 700;
+}
+.badge--sets { background: var(--accent-light); color: var(--accent); }
+.badge--reps { background: #e8f0fe; color: #3367d6; }
+.badge--weight { background: #fff3e0; color: #e65100; }
+
+.ex-gif-wrap {
+  background: var(--surface); border-radius: var(--radius);
+  border: 1px solid var(--border); overflow: hidden;
+  margin-bottom: 14px; text-align: center; padding: 8px;
+}
+
+.ex-muscles { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+.muscle-tag {
+  background: var(--bg); border: 1px solid var(--border);
+  color: var(--text-secondary); font-size: 12px; font-weight: 600;
+  padding: 4px 10px; border-radius: 20px;
+}
+
+/* Info cards */
+.info-card {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 12px 14px; border-radius: var(--radius);
+  background: var(--surface); border: 1px solid var(--border);
+  margin-bottom: 10px;
+}
+.info-card--accent { background: #fff8e1; border-color: #ffe082; }
+.info-card-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+.info-card-label { font-size: 12px; font-weight: 700; color: var(--text-secondary); margin-bottom: 2px; }
+.info-card-text { font-size: 14px; color: var(--text); line-height: 1.4; }
+
+/* Technique */
+.technique-list { list-style: none; padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; }
+.technique-item { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; line-height: 1.5; }
+.technique-num {
+  width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0;
+  background: var(--accent); color: white;
+  font-size: 12px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  margin-top: 1px;
+}
+
+/* Mistakes */
+.mistake-item {
+  padding: 10px 14px; font-size: 14px; color: var(--red);
+  line-height: 1.4;
+}
+.mistake-item + .mistake-item { border-top: 1px solid #f0ebe3; }
+
+/* Spine note */
+.spine-note {
+  background: #e8f5e9; border: 1px solid #c8e6c9; border-radius: var(--radius);
+  padding: 12px 14px; font-size: 14px; color: #2e7d32;
+  margin-bottom: 16px; line-height: 1.4;
+}

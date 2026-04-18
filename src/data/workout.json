@@ -1,0 +1,579 @@
+{
+  "program": {
+    "name": "Программа тренировок",
+    "level": "beginner",
+    "notes": "Адаптировано под протрузии позвоночника. Зал: гантели до ~30кг, Leg Press/Calf Press, Fitness Domain Multi Press/Pull Down, эллипсоид.",
+    "equipment_available": [
+      "Гантели (набор до ~30 кг)",
+      "Leg Press / Calf Press тренажёр",
+      "Fitness Domain: Chest Press, Seated Row, Lat Pulldown, Shoulder Press, Standing Hamstring Curl, верёвка и прямая ручка сверху",
+      "Эллипсоид"
+    ],
+    "spine_guidelines": [
+      "Исключены: становая тяга, приседания со штангой, жим стоя",
+      "Все упражнения в наклоне — минимальный вес, строгая техника",
+      "При дискомфорте в пояснице — немедленно прекратить",
+      "Перед силовыми блоками всегда разминка минимум 10 минут"
+    ],
+    "days": [
+      {
+        "day": "Понедельник",
+        "focus": "Ноги + Плечи",
+        "warmup": {
+          "exercise": "Эллипсоид",
+          "duration_min": 10,
+          "notes": "Лёгкий темп, разогрев суставов",
+          "image_url": "https://weighttraining.guide/wp-content/uploads/2016/10/elliptical-trainer-resized.gif"
+        },
+        "exercises": [
+          {
+            "id": 1,
+            "name": "Жим ногами",
+            "original": "Приседание со штангой",
+            "replaced": true,
+            "replace_reason": "Протрузии — осевая нагрузка на позвоночник опасна для новичка",
+            "equipment": "Leg Press тренажёр",
+            "sets": 3,
+            "reps": "7-12",
+            "weight_start_kg": "30-40",
+            "muscles": ["Квадрицепс", "Ягодицы", "Задняя поверхность бедра"],
+            "spine_safe": true,
+            "image_url": "https://weighttraining.guide/wp-content/uploads/2016/10/horizontal-leg-press-resized.gif",
+            "technique": [
+              "Спина и поясница плотно прижаты к спинке",
+              "Ступни на ширине плеч, носки чуть в стороны (~30°)",
+              "Опускать до угла ~90° в колене, не глубже",
+              "Не выпрямлять ноги до конца — оставить лёгкий сгиб",
+              "Выдох на усилии (жим), вдох при опускании"
+            ],
+            "common_mistakes": [
+              "Отрывать поясницу от спинки в нижней точке"
+            ]
+          },
+          {
+            "id": 2,
+            "name": "Сгибание ног стоя",
+            "original": "Румынская становая тяга",
+            "replaced": true,
+            "replace_reason": "Наклон вперёд с весом опасен при протрузиях без отработанной техники",
+            "equipment": "Fitness Domain — Standing Hamstring Curl",
+            "sets": 3,
+            "reps": "12-15",
+            "weight_start_kg": "подобрать на тренажёре",
+            "muscles": ["Задняя поверхность бедра"],
+            "spine_safe": true,
+            "image_url": "https://weighttraining.guide/wp-content/uploads/2016/10/standing-leg-curl-resized.gif",
+            "technique": [
+              "Встать лицом к тренажёру, нога зафиксирована валиком у щиколотки",
+              "Сгибать ногу — пятка к ягодице",
+              "Медленно опускать, не бросать ногу",
+              "Все повторения на одну ногу, затем менять"
+            ],
+            "common_mistakes": ["Резко бросать ногу вниз"]
+          },
+          {
+            "id": 3,
+            "name": "Разгибание ног в тренажёре",
+            "original": "Разгибание ног в тренажере",
+            "replaced": false,
+            "equipment": "Тренажёр разгибания ног (если есть в зале)",
+            "equipment_alternative": "Если нет — добавить подход к упражнению №2",
+            "sets": 3,
+            "reps": "12-15",
+            "weight_start_kg": "подобрать",
+            "muscles": ["Квадрицепс"],
+            "spine_safe": true,
+            "image_url": "https://weighttraining.guide/wp-content/uploads/2016/05/Leg-Extension-resized.gif",
+            "technique": [
+              "Сесть, голени завести под верхний валик",
+              "Разгибать ноги до прямого положения",
+              "Задержать на 1 секунду вверху",
+              "Медленно опускать 2-3 секунды"
+            ],
+            "common_mistakes": ["Бросать вес при опускании"]
+          },
+          {
+            "id": 4,
+            "name": "Сгибание ног лёжа",
+            "original": "Сгибание ног в тренажере",
+            "replaced": false,
+            "equipment": "Тренажёр сгибания ног лёжа (если есть)",
+            "equipment_alternative": "Если нет — Standing Hamstring Curl поочерёдно",
+            "sets": 3,
+            "reps": "12-15",
+            "weight_start_kg": "подобрать",
+            "muscles": ["Задняя поверхность бедра"],
+            "spine_safe": true,
+            "image_url": "https://weighttraining.guide/wp-content/uploads/2016/05/lying-leg-curl-resized.gif",
+            "technique": [
+              "Лечь лицом вниз, пятки завести под нижний валик",
+              "Сгибать ноги — пятки к ягодицам",
+              "Таз не отрывать от скамьи",
+              "Медленно опускать"
+            ],
+            "common_mistakes": ["Отрывать таз от скамьи"]
+          },
+          {
+            "id": 5,
+            "name": "Жим плечей сидя на тренажёре",
+            "original": "Жим гантелями сидя / стоя",
+            "replaced": true,
+            "replace_reason": "Тренажёр безопаснее — спина поддержана спинкой",
+            "equipment": "Fitness Domain — Shoulder Press",
+            "sets": 3,
+            "reps": "8-12",
+            "weight_start_kg": "подобрать на тренажёре",
+            "muscles": ["Передние дельты", "Средние дельты", "Трицепс"],
+            "spine_safe": true,
+            "image_url": "https://weighttraining.guide/wp-content/uploads/2016/05/machine-shoulder-press-resized.gif",
+            "technique": [
+              "Сесть спиной к тренажёру, спина прижата к спинке",
+              "Взяться за ручки на уровне плеч",
+              "Жать вверх до почти выпрямленных рук",
+              "Медленно возвращать вниз"
+            ],
+            "common_mistakes": ["Выполнять стоя — осевая нагрузка на позвоночник"]
+          },
+          {
+            "id": 6,
+            "name": "Подъём гантелей перед собой поочерёдно",
+            "original": "Подъем гантелей перед собой поочередно",
+            "replaced": false,
+            "equipment": "Гантели",
+            "sets": 3,
+            "reps": "15 (каждая рука)",
+            "weight_start_kg": "4-6",
+            "muscles": ["Передние дельты"],
+            "spine_safe": true,
+            "image_url": "https://weighttraining.guide/wp-content/uploads/2016/05/Dumbbell-Alternate-Front-Raise-resized.gif",
+            "technique": [
+              "Стоять прямо, гантели опущены ладонями к бёдрам",
+              "Поднимать одну руку вперёд до уровня плеча",
+              "Небольшой сгиб в локте",
+              "Напрячь пресс, не раскачивать корпус"
+            ],
+            "common_mistakes": ["Раскачивать корпус", "Поднимать выше плеча"]
+          },
+          {
+            "id": 7,
+            "name": "Подъём гантелей в стороны стоя",
+            "original": "Подъем гантелей в стороны стоя",
+            "replaced": false,
+            "equipment": "Гантели",
+            "sets": 3,
+            "reps": "15",
+            "weight_start_kg": "4-6",
+            "muscles": ["Средние дельты"],
+            "spine_safe": true,
+            "image_url": "https://weighttraining.guide/wp-content/uploads/2016/05/dumbbell-lateral-raise-resized.gif",
+            "technique": [
+              "Гантели по бокам, ладони смотрят внутрь",
+              "Поднимать в стороны до уровня плеч — не выше",
+              "Локти чуть согнуты, вести движение локтем",
+              "Медленно опускать"
+            ],
+            "common_mistakes": ["Поднимать выше плеч", "Раскачиваться корпусом"]
+          },
+          {
+            "id": 8,
+            "name": "Подъём гантелей в стороны в наклоне",
+            "original": "Подъем гантелей в стороны в наклоне",
+            "replaced": false,
+            "equipment": "Гантели",
+            "sets": 3,
+            "reps": "15",
+            "weight_start_kg": "4-6",
+            "muscles": ["Задние дельты"],
+            "spine_safe": true,
+            "image_url": "https://weighttraining.guide/wp-content/uploads/2016/05/Dumbbell-Rear-Lateral-Raise-resized.gif",
+            "technique": [
+              "Наклониться вперёд — корпус почти параллельно полу",
+              "Наклон за счёт тазобедренного сустава — таз назад, спина прямая",
+              "Поднимать гантели в стороны до уровня плеч",
+              "Стараться свести лопатки"
+            ],
+            "common_mistakes": ["Скруглять поясницу в наклоне"],
+            "spine_note": "Если дискомфорт — делать сидя, упершись грудью в бедро"
+          }
+        ],
+        "cooldown": {
+          "duration_min": 10,
+          "stretches": [
+            {
+              "name": "Растяжка квадрицепса",
+              "technique": "Стоять у стены, подтянуть пятку к ягодице. 30 секунд каждая нога.",
+              "image_url": "https://weighttraining.guide/wp-content/uploads/2016/10/standing-quad-stretch-resized.gif"
+            },
+            {
+              "name": "Растяжка задней поверхности бедра",
+              "technique": "Сесть на пол, ноги прямые, тянуться к носкам — спина прямая. 30-40 секунд.",
+              "image_url": "https://weighttraining.guide/wp-content/uploads/2016/10/seated-hamstring-stretch-resized.gif"
+            },
+            {
+              "name": "Растяжка плеч",
+              "technique": "Вытянуть руку, другой рукой прижать к груди. 30 секунд каждая рука.",
+              "image_url": "https://weighttraining.guide/wp-content/uploads/2016/10/cross-body-shoulder-stretch-resized.gif"
+            }
+          ]
+        }
+      },
+      {
+        "day": "Вторник",
+        "focus": "Кардио",
+        "exercises": [
+          {
+            "id": 1,
+            "name": "Кардио",
+            "equipment": "Эллипсоид",
+            "duration_min": 40,
+            "notes": "Средний темп, пульс 120-140 уд/мин. Держаться за подвижные рукоятки.",
+            "image_url": "https://weighttraining.guide/wp-content/uploads/2016/10/elliptical-trainer-resized.gif"
+          }
+        ]
+      },
+      {
+        "day": "Среда",
+        "focus": "Спина + Бицепс",
+        "warmup": {
+          "exercise": "Эллипсоид",
+          "duration_min": 10,
+          "notes": "Лёгкий темп",
+          "image_url": "https://weighttraining.guide/wp-content/uploads/2016/10/elliptical-trainer-resized.gif"
+        },
+        "exercises": [
+          {
+            "id": 1,
+            "name": "Тяга верхнего блока широким хватом",
+            "original": "Подтягивания на турнике",
+            "replaced": true,
+            "replace_reason": "Турника нет в зале — Lat Pulldown полноценная замена теми же мышцами",
+            "equipment": "Fitness Domain — Lat Pulldown",
+            "sets": 3,
+            "reps": "12-15",
+            "weight_start_kg": "подобрать на тренажёре",
+            "muscles": ["Широчайшие мышцы спины", "Бицепс", "Задние дельты"],
+            "spine_safe": true,
+            "image_url": "https://weighttraining.guide/wp-content/uploads/2016/05/lat-pull-down-resized.gif",
+            "technique": [
+              "Сесть, зафиксировать бёдра под валиком",
+              "Хват широкий — чуть шире плеч, ладони от себя",
+              "Тянуть гриф к верхней части груди",
+              "Локти идут вниз и назад",
+              "Медленно возвращать вверх"
+            ],
+            "common_mistakes": ["Тянуть за голову — опасно для шеи", "Раскачиваться корпусом"]
+          },
+          {
+            "id": 2,
+            "name": "Тяга верхнего блока узким хватом",
+            "original": "Тяга верхнего блока узким хватом к груди",
+            "replaced": false,
+            "equipment": "Fitness Domain — Lat Pulldown (сменить на узкую рукоять)",
+            "sets": 3,
+            "reps": "12-15",
+            "weight_start_kg": "подобрать на тренажёре",
+            "muscles": ["Широчайшие мышцы спины", "Бицепс"],
+            "spine_safe": true,
+            "image_url": "https://weighttraining.guide/wp-content/uploads/2016/05/close-grip-lat-pulldown-resized.gif",
+            "technique": [
+              "Узкая рукоять ладонями друг к другу",
+              "Тянуть к нижней части груди",
+              "Локти идут вниз вдоль корпуса"
+            ]
+          },
+          {
+            "id": 3,
+            "name": "Тяга сидя на тренажёре",
+            "original": "Тяга гантелей поочередно в наклоне",
+            "replaced": true,
+            "replace_reason": "Наклон корпуса с весом нагружает поясницу — Seated Row безопаснее",
+            "equipment": "Fitness Domain — Seated Row",
+            "sets": 3,
+            "reps": "12-15",
+            "weight_start_kg": "подобрать на тренажёре",
+            "muscles": ["Средняя часть спины", "Ромбовидные", "Бицепс"],
+            "spine_safe": true,
+            "image_url": "https://weighttraining.guide/wp-content/uploads/2016/05/seated-cable-row-resized.gif",
+            "technique": [
+              "Сесть, упереться ногами в платформу",
+              "Спина прямая, лёгкий прогиб в пояснице",
+              "Тянуть ручку к животу",
+              "Локти идут назад вдоль корпуса",
+              "Свести лопатки в конечной точке",
+              "Медленно возвращать — не тянуться корпусом вперёд"
+            ],
+            "common_mistakes": ["Раскачивать корпус", "Скруглять спину"]
+          },
+          {
+            "id": 4,
+            "name": "Тяга нижнего блока узким хватом",
+            "original": "Тяга нижнего блока узким хватом к животу",
+            "replaced": false,
+            "equipment": "Fitness Domain — Seated Row (нижняя позиция)",
+            "sets": 3,
+            "reps": "12-15",
+            "weight_start_kg": "подобрать на тренажёре",
+            "muscles": ["Средняя часть спины", "Широчайшие", "Бицепс"],
+            "spine_safe": true,
+            "image_url": "https://weighttraining.guide/wp-content/uploads/2016/05/seated-cable-row-resized.gif",
+            "technique": [
+              "Узкая рукоять ладонями друг к другу",
+              "Тянуть к поясу, локти вдоль корпуса"
+            ]
+          },
+          {
+            "id": 5,
+            "name": "Подъём на бицепс с гантелями поочерёдно",
+            "original": "Подъем на бицепс штанги с EZ-грифом",
+            "replaced": true,
+            "replace_reason": "EZ-грифа нет в зале — гантели полноценная замена",
+            "equipment": "Гантели",
+            "sets": 3,
+            "reps": "12-15",
+            "weight_start_kg": "8-12",
+            "muscles": ["Бицепс"],
+            "spine_safe": true,
+            "image_url": "https://weighttraining.guide/wp-content/uploads/2016/05/dumbbell-alternate-bicep-curl-resized.gif",
+            "technique": [
+              "Стоять прямо, гантели ладонями вперёд",
+              "Сгибать руку — гантель к плечу",
+              "Локоть зафиксирован у корпуса",
+              "Медленно опускать, чередовать руки"
+            ],
+            "common_mistakes": ["Двигать локтем вперёд", "Раскачивать корпус"]
+          },
+          {
+            "id": 6,
+            "name": "Молотковый подъём на бицепс",
+            "original": "Поочередный подъем на бицепс гантелями",
+            "replaced": false,
+            "equipment": "Гантели",
+            "sets": 3,
+            "reps": "12-15",
+            "weight_start_kg": "8-12",
+            "muscles": ["Бицепс", "Плечевая мышца", "Предплечье"],
+            "spine_safe": true,
+            "image_url": "https://weighttraining.guide/wp-content/uploads/2016/05/Hammer-Curl-resized.gif",
+            "technique": [
+              "Ладони смотрят друг на друга (нейтральный хват)",
+              "Поднимать как молоток — большой палец вверх",
+              "Локоть зафиксирован у корпуса",
+              "Чередовать руки"
+            ]
+          }
+        ],
+        "cooldown": {
+          "duration_min": 10,
+          "stretches": [
+            {
+              "name": "Растяжка широчайших",
+              "technique": "Взяться одной рукой за стойку, отклониться корпусом в сторону. 30 секунд каждая сторона.",
+              "image_url": "https://weighttraining.guide/wp-content/uploads/2016/10/lat-stretch-resized.gif"
+            },
+            {
+              "name": "Растяжка бицепса",
+              "technique": "Вытянуть руку ладонью вверх, другой рукой мягко отогнуть пальцы вниз. 30 секунд каждая рука.",
+              "image_url": "https://weighttraining.guide/wp-content/uploads/2016/10/bicep-stretch-resized.gif"
+            },
+            {
+              "name": "Кошка-корова (для спины)",
+              "technique": "На четвереньках: вдох — прогнуть спину вниз, выдох — округлить вверх. 10 медленных повторений.",
+              "image_url": "https://weighttraining.guide/wp-content/uploads/2016/10/cat-cow-stretch-resized.gif"
+            }
+          ]
+        }
+      },
+      {
+        "day": "Четверг",
+        "focus": "Кардио",
+        "exercises": [
+          {
+            "id": 1,
+            "name": "Кардио",
+            "equipment": "Эллипсоид",
+            "duration_min": 40,
+            "notes": "Средний темп, пульс 120-140 уд/мин.",
+            "image_url": "https://weighttraining.guide/wp-content/uploads/2016/10/elliptical-trainer-resized.gif"
+          }
+        ]
+      },
+      {
+        "day": "Пятница",
+        "focus": "Грудь + Трицепс",
+        "warmup": {
+          "exercise": "Эллипсоид",
+          "duration_min": 10,
+          "notes": "Лёгкий темп",
+          "image_url": "https://weighttraining.guide/wp-content/uploads/2016/10/elliptical-trainer-resized.gif"
+        },
+        "exercises": [
+          {
+            "id": 1,
+            "name": "Жим груди на тренажёре",
+            "original": "Жим лежа",
+            "replaced": true,
+            "replace_reason": "Штанги нет — Chest Press на Fitness Domain полноценная замена",
+            "equipment": "Fitness Domain — Chest Press",
+            "sets": 3,
+            "reps": "7-12",
+            "weight_start_kg": "подобрать на тренажёре",
+            "muscles": ["Большая грудная мышца", "Трицепс", "Передние дельты"],
+            "spine_safe": true,
+            "image_url": "https://weighttraining.guide/wp-content/uploads/2016/05/chest-press-machine-resized.gif",
+            "technique": [
+              "Сесть, спина прижата к спинке",
+              "Ручки на уровне груди",
+              "Жать вперёд до почти выпрямленных рук",
+              "Медленно возвращать"
+            ],
+            "alternative": {
+              "name": "Жим гантелями лёжа на полу",
+              "equipment": "Гантели",
+              "notes": "Лечь на пол, гантели у груди, жать вверх. Пол ограничивает амплитуду — безопасно.",
+              "image_url": "https://weighttraining.guide/wp-content/uploads/2016/05/dumbbell-floor-press-resized.gif"
+            }
+          },
+          {
+            "id": 2,
+            "name": "Разведение гантелей лёжа",
+            "original": "Разведение гантелей на наклонной скамье",
+            "replaced": true,
+            "replace_reason": "Наклонной скамьи нет — делаем на полу горизонтально",
+            "equipment": "Гантели (лёжа на полу)",
+            "sets": 3,
+            "reps": "12-15",
+            "weight_start_kg": "6-8",
+            "muscles": ["Большая грудная мышца"],
+            "spine_safe": true,
+            "image_url": "https://weighttraining.guide/wp-content/uploads/2016/05/dumbbell-fly-resized.gif",
+            "technique": [
+              "Лечь на пол, гантели над грудью ладонями друг к другу",
+              "Разводить в стороны по дуге — как обнимаешь шар",
+              "Локти чуть согнуты на протяжении всего движения",
+              "Опускать до уровня пола",
+              "Сводить обратно той же дугой"
+            ],
+            "common_mistakes": ["Выпрямлять локти полностью", "Опускать слишком низко"]
+          },
+          {
+            "id": 3,
+            "name": "Разведение гантелей лёжа (акцент верх груди)",
+            "original": "Сведение рук в кроссовере с верху",
+            "replaced": true,
+            "replace_reason": "Кроссовера нет — разведение гантелей аналогичная нагрузка",
+            "equipment": "Гантели (лёжа на полу)",
+            "sets": 3,
+            "reps": "12-15",
+            "weight_start_kg": "6-8",
+            "muscles": ["Грудные мышцы (верхняя часть)"],
+            "spine_safe": true,
+            "image_url": "https://weighttraining.guide/wp-content/uploads/2016/05/dumbbell-fly-resized.gif",
+            "technique": [
+              "Аналогично упр. 2, но подложить под спину свёрнутый коврик для лёгкого наклона",
+              "Или выполнять стоя в лёгком наклоне вперёд — гантели сводить перед собой"
+            ]
+          },
+          {
+            "id": 4,
+            "name": "Отжимания от пола",
+            "original": "Отжимания на брусьях",
+            "replaced": true,
+            "replace_reason": "Брусьев нет в зале",
+            "equipment": "Пол (собственный вес)",
+            "sets": 3,
+            "reps": "12-15",
+            "muscles": ["Трицепс", "Грудные", "Передние дельты"],
+            "spine_safe": true,
+            "image_url": "https://weighttraining.guide/wp-content/uploads/2016/05/push-up-resized.gif",
+            "technique": [
+              "Упор лёжа, руки чуть уже плеч — акцент на трицепс",
+              "Тело прямое — не провисать в пояснице",
+              "Опускаться до касания грудью пола",
+              "Жать вверх до выпрямления рук"
+            ],
+            "alternative": {
+              "name": "Отжимания от скамьи",
+              "notes": "Сесть на край скамьи, руки сзади, ноги вытянуть, опускать корпус вниз.",
+              "image_url": "https://weighttraining.guide/wp-content/uploads/2016/05/triceps-dip-resized.gif"
+            }
+          },
+          {
+            "id": 5,
+            "name": "Разгибание трицепса с верёвкой на блоке",
+            "original": "Разгибание рук в верхнем блоке с канатом",
+            "replaced": false,
+            "equipment": "Fitness Domain — верёвочная рукоять сверху",
+            "sets": 3,
+            "reps": "12-15",
+            "weight_start_kg": "подобрать на тренажёре",
+            "muscles": ["Трицепс"],
+            "spine_safe": true,
+            "image_url": "https://weighttraining.guide/wp-content/uploads/2016/05/cable-rope-overhead-tricep-extension-resized.gif",
+            "technique": [
+              "Блок на верхнем положении, взяться за верёвку",
+              "Локти прижаты к корпусу — не двигаются",
+              "Давить вниз до полного разгибания",
+              "Разводить концы верёвки в стороны внизу",
+              "Медленно возвращать вверх"
+            ],
+            "common_mistakes": ["Двигать локтями", "Раскачивать корпус"]
+          },
+          {
+            "id": 6,
+            "name": "Разгибание трицепса с прямой ручкой на блоке",
+            "original": "Разгибание рук в верхнем блоке с ручкой",
+            "replaced": false,
+            "equipment": "Fitness Domain — прямая или EZ-ручка сверху",
+            "sets": 3,
+            "reps": "12-15",
+            "weight_start_kg": "подобрать на тренажёре",
+            "muscles": ["Трицепс (латеральная головка)"],
+            "spine_safe": true,
+            "image_url": "https://weighttraining.guide/wp-content/uploads/2016/05/triceps-pushdown-resized.gif",
+            "technique": [
+              "Хват сверху (пронация), локти у корпуса",
+              "Давить вниз до полного разгибания",
+              "Медленно возвращать",
+              "Сменить насадку с верёвки на прямую ручку"
+            ]
+          }
+        ],
+        "cooldown": {
+          "duration_min": 10,
+          "stretches": [
+            {
+              "name": "Растяжка груди у стены",
+              "technique": "Прижать руку к стене или косяку, развернуть корпус в сторону. 30 секунд каждая сторона.",
+              "image_url": "https://weighttraining.guide/wp-content/uploads/2016/10/chest-wall-stretch-resized.gif"
+            },
+            {
+              "name": "Растяжка трицепса",
+              "technique": "Поднять руку, согнуть в локте — ладонь за голову. Другой рукой потянуть локоть вниз. 30 секунд каждая рука.",
+              "image_url": "https://weighttraining.guide/wp-content/uploads/2016/10/overhead-tricep-stretch-resized.gif"
+            }
+          ]
+        }
+      },
+      {
+        "day": "Суббота",
+        "focus": "Кардио",
+        "exercises": [
+          {
+            "id": 1,
+            "name": "Кардио",
+            "equipment": "Эллипсоид",
+            "duration_min": 40,
+            "notes": "Средний темп, пульс 120-140 уд/мин.",
+            "image_url": "https://weighttraining.guide/wp-content/uploads/2016/10/elliptical-trainer-resized.gif"
+          }
+        ]
+      },
+      {
+        "day": "Воскресенье",
+        "focus": "Отдых",
+        "exercises": [],
+        "notes": "Полный отдых. Можно лёгкая прогулка или растяжка дома."
+      }
+    ]
+  }
+}
