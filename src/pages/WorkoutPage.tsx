@@ -37,8 +37,6 @@ export default function WorkoutPage() {
   const [logs, setLogs] = useState<WorkoutLogs>(loadLogs);
   const [showCalendar, setShowCalendar] = useState(false);
 
-  function refreshLogs() { setLogs(loadLogs()); }
-
   if (view.screen === 'week') {
     return (
       <>
