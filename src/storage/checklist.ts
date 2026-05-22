@@ -44,6 +44,19 @@ export function addItem(list: Checklist, catId: string, name: string): Checklist
   };
 }
 
+export function addItems(list: Checklist, catId: string, names: string[]): Checklist {
+  const clean = names
+    .map(n => n.trim())
+    .filter(n => n.length > 0);
+  if (clean.length === 0) return list;
+  const newItems = clean.map(name => ({ id: uid(), name, taken: false }));
+  return {
+    categories: list.categories.map(c =>
+      c.id === catId ? { ...c, items: [...c.items, ...newItems] } : c,
+    ),
+  };
+}
+
 export function removeItem(list: Checklist, catId: string, itemId: string): Checklist {
   return {
     categories: list.categories.map(c =>

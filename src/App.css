@@ -1043,7 +1043,8 @@ body {
   gap: 8px;
   padding: 8px 12px 12px;
 }
-.cl-add-row input {
+.cl-add-row input,
+.cl-add-row textarea {
   flex: 1;
   padding: 10px 12px;
   border: 1px solid #d4d4d8;
@@ -1052,8 +1053,12 @@ body {
   outline: none;
   background: #fff;
   transition: border-color 0.15s;
+  font-family: inherit;
+  resize: none;
+  line-height: 1.4;
 }
-.cl-add-row input:focus {
+.cl-add-row input:focus,
+.cl-add-row textarea:focus {
   border-color: #6366f1;
 }
 .cl-add-item {

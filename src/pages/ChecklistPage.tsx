@@ -5,7 +5,7 @@ import {
   saveChecklist,
   addCategory,
   removeCategory,
-  addItem,
+  addItems,
   removeItem,
   toggleItem,
   resetAll,
@@ -34,9 +34,14 @@ export default function ChecklistPage() {
   };
 
   const handleAddItem = (catId: string) => {
-    const name = itemInputs[catId];
-    if (!name?.trim()) return;
-    setData(addItem(data, catId, name));
+    const raw = itemInputs[catId];
+    if (!raw?.trim()) return;
+    const names = raw
+      .split(/[\n,;]+/)
+      .map(s => s.replace(/^[\d.\-)\s•·●○]+/, '').trim())
+      .filter(s => s.length >= 1);
+    if (names.length === 0) return;
+    setData(addItems(data, catId, names));
     setItemInputs({ ...itemInputs, [catId]: '' });
   };
 
@@ -120,17 +125,19 @@ export default function ChecklistPage() {
               </div>
 
               <div className="cl-add-row">
-                <input
-                  type="text"
+                <textarea
                   value={itemInputs[cat.id] || ''}
                   onChange={e => setItemInputs({ ...itemInputs, [cat.id]: e.target.value })}
                   onKeyDown={e => {
-                    if (e.key === 'Enter') {
+                    if (e.key === 'Enter' && !e.shiftKey) {
                       e.preventDefault();
                       handleAddItem(cat.id);
                     }
                   }}
-                  placeholder="Добавить вещь…"
+                  placeholder="Добавить вещь… (можно списком)"
+                  rows={(itemInputs[cat.id] || '').includes('\n')
+                    ? Math.min((itemInputs[cat.id] || '').split('\n').length + 1, 8)
+                    : 1}
                 />
                 <button
                   className="cl-add-item"
