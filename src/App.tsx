@@ -1,13 +1,15 @@
 import { useState } from 'react';
 import ShoppingListPage from './pages/ShoppingListPage';
 import WorkoutPage from './pages/WorkoutPage';
+import ChecklistPage from './pages/ChecklistPage';
 import './App.css';
 
-type TabId = 'list' | 'workout';
+type TabId = 'list' | 'workout' | 'checklist';
 
 const TABS: { id: TabId; label: string; icon: string }[] = [
-  { id: 'list',    label: 'Список',      icon: '🛒' },
-  { id: 'workout', label: 'Тренировки',  icon: '💪' },
+  { id: 'list',      label: 'Список',     icon: '🛒' },
+  { id: 'workout',   label: 'Тренировки', icon: '💪' },
+  { id: 'checklist', label: 'Чеклист',    icon: '🎒' },
 ];
 
 export default function App() {
@@ -16,8 +18,9 @@ export default function App() {
   return (
     <div className="app-shell">
       <div className="page-container">
-        {activeTab === 'list'    && <ShoppingListPage />}
-        {activeTab === 'workout' && <WorkoutPage />}
+        {activeTab === 'list'      && <ShoppingListPage />}
+        {activeTab === 'workout'   && <WorkoutPage />}
+        {activeTab === 'checklist' && <ChecklistPage />}
       </div>
 
       <nav className="tab-bar">

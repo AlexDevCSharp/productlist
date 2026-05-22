@@ -1036,3 +1036,58 @@ body {
   75%  { opacity: 1; }
   100% { opacity: 0; }
 }
+
+/* === Checklist === */
+.cl-add-row {
+  display: flex;
+  gap: 8px;
+  padding: 8px 12px 12px;
+}
+.cl-add-row input {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid #d4d4d8;
+  border-radius: 10px;
+  font-size: 15px;
+  outline: none;
+  background: #fff;
+  transition: border-color 0.15s;
+}
+.cl-add-row input:focus {
+  border-color: #6366f1;
+}
+.cl-add-item {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 10px;
+  background: #6366f1;
+  color: #fff;
+  font-size: 22px;
+  font-weight: 600;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s, transform 0.1s;
+}
+.cl-add-item:active {
+  transform: scale(0.95);
+}
+.cl-add-item:disabled {
+  background: #d4d4d8;
+  cursor: not-allowed;
+}
+.cl-cat-delete {
+  margin-left: 8px;
+  border: none;
+  background: transparent;
+  color: #a1a1aa;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 4px 6px;
+  border-radius: 6px;
+  transition: background 0.15s, color 0.15s;
+}
+.cl-cat-delete:hover {
+  background: #fee2e2;
+  color: #dc2626;
+}
