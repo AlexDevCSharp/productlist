@@ -16,6 +16,8 @@ import {
 import MovieCard from './movies/MovieCard';
 import MovieForm from './movies/MovieForm';
 import MoviesFilters, { StatusFilter, SortMode } from './movies/MoviesFilters';
+import TelegramImportModal from './movies/TelegramImportModal';
+import { parseTelegramExport, MovieCandidate } from '../storage/telegramImport';
 
 export default function MoviesPage() {
   const [data, setData] = useState<MoviesData>(loadMovies);
@@ -26,6 +28,7 @@ export default function MoviesPage() {
   const [genreFilter, setGenreFilter] = useState<Genre | 'all'>('all');
   const [sortMode, setSortMode] = useState<SortMode>('added');
   const importInputRef = useRef<HTMLInputElement>(null);
+  const [tgCandidates, setTgCandidates] = useState<MovieCandidate[] | null>(null);
 
   useEffect(() => { saveMovies(data); }, [data]);
 
@@ -67,29 +70,57 @@ export default function MoviesPage() {
     if (!file) return;
     try {
       const text = await file.text();
-      const imported = importJSON(text);
-      if (data.movies.length > 0) {
-        const merge = confirm(
-          `Импортировано ${imported.movies.length} фильмов.\n\n` +
-          `OK — объединить с текущими (${data.movies.length})\n` +
-          `Отмена — заменить полностью`,
-        );
-        if (merge) {
-          const existingIds = new Set(data.movies.map(m => m.id));
-          const merged = [
-            ...data.movies,
-            ...imported.movies.filter(m => !existingIds.has(m.id)),
-          ];
-          setData({ movies: merged });
+      let parsed: any;
+      try { parsed = JSON.parse(text); }
+      catch { throw new Error('Файл не является валидным JSON'); }
+
+      // Telegram Desktop export → open preview modal
+      if (Array.isArray(parsed?.messages)) {
+        const candidates = parseTelegramExport(text);
+        if (candidates.length === 0) {
+          alert('В этом экспорте нет сообщений со ссылками.');
+          return;
+        }
+        setTgCandidates(candidates);
+        return;
+      }
+
+      // Own format
+      if (Array.isArray(parsed?.movies)) {
+        const imported = importJSON(text);
+        if (data.movies.length > 0) {
+          const merge = confirm(
+            `Импортировано ${imported.movies.length} фильмов.\n\n` +
+            `OK — объединить с текущими (${data.movies.length})\n` +
+            `Отмена — заменить полностью`,
+          );
+          if (merge) {
+            const existingIds = new Set(data.movies.map(m => m.id));
+            const merged = [
+              ...data.movies,
+              ...imported.movies.filter(m => !existingIds.has(m.id)),
+            ];
+            setData({ movies: merged });
+          } else {
+            setData(imported);
+          }
         } else {
           setData(imported);
         }
-      } else {
-        setData(imported);
+        return;
       }
+
+      throw new Error('Неизвестный формат: ожидается { movies: [...] } или экспорт Telegram Desktop.');
     } catch (err: any) {
       alert(`Ошибка импорта: ${err?.message ?? err}`);
     }
+  };
+
+  const handleTgImport = (movies: MovieInput[]) => {
+    let next = data;
+    for (const m of movies) next = addMovie(next, m);
+    setData(next);
+    setTgCandidates(null);
   };
 
   return (
@@ -113,7 +144,7 @@ export default function MoviesPage() {
                 📤 Экспорт JSON
               </button>
               <button onClick={() => { handleImportClick(); setShowMenu(false); }}>
-                📥 Импорт JSON
+                📥 Импорт JSON / Telegram
               </button>
             </div>
           </>
@@ -176,6 +207,15 @@ export default function MoviesPage() {
           initial={editing ?? undefined}
           onSubmit={handleSubmit}
           onClose={() => { setFormOpen(false); setEditing(null); }}
+        />
+      )}
+
+      {tgCandidates && (
+        <TelegramImportModal
+          candidates={tgCandidates}
+          existingUrls={new Set(data.movies.map(m => m.url).filter(Boolean))}
+          onImport={handleTgImport}
+          onClose={() => setTgCandidates(null)}
         />
       )}
     </div>
